@@ -1,4 +1,4 @@
-numpy
-opencv-python==4.4.0.46
+numpy==1.26.4
+opencv-python==4.6.0
 Pillow==10.3.0
 streamlit_cookies_controller==0.0.4
