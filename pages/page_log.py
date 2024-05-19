@@ -1,6 +1,4 @@
 import streamlit as st
-from streamlit_cookies_controller import CookieController
-from pages.page_deal import show_page_deal
 
 def show_page_log():
     controller = st.session_state.controller

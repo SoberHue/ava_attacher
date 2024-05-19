@@ -1,7 +1,5 @@
-import streamlit as st
 from utils import *
 import base64
-from streamlit_cookies_controller import CookieController
 
 
 def show_page_deal():
