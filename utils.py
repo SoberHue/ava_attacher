@@ -148,13 +148,13 @@ def resize_and_overlay(background_path, overlay_path, avatar_positions):
         return img_byte_arr
 
 
-if __name__ == '__main__':
-    in_p = 'test2.jpg'
-    s_p = 'ava.jpg'
-    color_to_white(in_p, 'test_bw.png')  # need
-    # 圆角头像处理
-    source_img = s_p  # need
-    output_img_rounded = 'avatar_r.png'
-    round_corners(source_img, output_img_rounded, 60)
-    avatar_positions = origin_ava_positions('test_bw.png', )
-    resize_and_overlay(in_p, 'avatar_r.png', avatar_positions)
+# if __name__ == '__main__':
+#     in_p = 'test2.jpg'
+#     s_p = 'ava.jpg'
+#     color_to_white(in_p, 'test_bw.png')  # need
+#     # 圆角头像处理
+#     source_img = s_p  # need
+#     output_img_rounded = 'avatar_r.png'
+#     round_corners(source_img, output_img_rounded, 60)
+#     avatar_positions = origin_ava_positions('test_bw.png', )
+#     resize_and_overlay(in_p, 'avatar_r.png', avatar_positions)

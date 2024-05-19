@@ -38,7 +38,7 @@ def show_page_deal():
     result_list = []
 
     if uploaded_file1 and uploaded_file2:
-        st.session_state.result_list = process_images(uploaded_file1, uploaded_file2, 90)
+        st.session_state.result_list = process_images(uploaded_file1, uploaded_file2, 80)
 
     if st.session_state.generated:
         if st.session_state.result_list:
