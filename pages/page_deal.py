@@ -2,7 +2,6 @@ from utils import *
 import base64
 import time
 import streamlit as st
-from itertools import cycle
 
 
 
@@ -11,8 +10,8 @@ def show_page_deal():
     st.set_page_config('AVA Attacher', '🍪', layout='wide')
     st.header(f'欢迎你！{st.session_state.user}')
     st.session_state.good = False
-    container1 = st.container(height=300, border=True)
-    container2 = st.container(height=300, border=True)
+    container1 = st.container(height=200)
+    container2 = st.container(height=200)
     # 添加文件上传按钮
     uploaded_file1 = container1.file_uploader("选择聊天图", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
     uploaded_file2 = container2.file_uploader("选择头像", type=["jpg", "jpeg", "png"], accept_multiple_files=False)
@@ -21,7 +20,7 @@ def show_page_deal():
         image_data2 = BytesIO(uploaded_file2.read())
         result_list = []
         with st.spinner('Wait for it...'):
-            container2.image(uploaded_file2, caption='上传的头像', use_column_width="never")
+            container2.image(uploaded_file2, caption='上传的头像')
             for img in uploaded_file1:
                 image_data2.seek(0)
                 image_data1 = BytesIO(img.read())
