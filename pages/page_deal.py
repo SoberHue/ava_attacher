@@ -16,32 +16,6 @@ def show_page_deal():
     # 添加文件上传按钮
     uploaded_file1 = container1.file_uploader("选择聊天图", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
     uploaded_file2 = container2.file_uploader("选择头像", type=["jpg", "jpeg", "png"], accept_multiple_files=False)
-
-    # if uploaded_files:
-    #     THUMBNAIL_HEIGHT = 200  # 确保这个高度适合您的布局需求，之前示例中误写为20
-    #
-    #     # 计算每行可以展示的图片数量（这里假设一个合适的数量，您可能需要根据实际情况调整）
-    #     images_per_row = 12  # 例如，每行展示12张图片
-    #     columns = container1.columns(images_per_row)  # 创建相应数量的列
-    #
-    #     for idx, uploaded_file in enumerate(uploaded_files):
-    #         image_data = uploaded_file.read()
-    #         image = Image.open(BytesIO(image_data))
-    #
-    #         # 直接基于THUMBNAIL_HEIGHT调整高度，宽度按比例计算
-    #         width, original_height = image.size
-    #         new_height = THUMBNAIL_HEIGHT
-    #         ratio = new_height / original_height
-    #         new_width = int(width * ratio)
-    #
-    #         resized_image = image.resize((new_width, new_height), resample=Image.LANCZOS)
-    #         img_byte_arr = BytesIO()
-    #         resized_image.save(img_byte_arr, format='PNG')
-    #         img_byte_arr.seek(0)
-    #
-    #         col_idx = idx % images_per_row
-    #         columns[col_idx].image(img_byte_arr, caption=uploaded_file.name, use_column_width=False)
-
     # 读取图片数据
     if uploaded_file1 and uploaded_file2:
         image_data2 = BytesIO(uploaded_file2.read())
@@ -67,19 +41,3 @@ def show_page_deal():
                     file_name=f"{str(time.time()).replace('.','_')}.png",
                     mime="image/png"
                 )
-
-        # # 当用户上传文件后执行以下操作
-        # if st.session_state.get('good', None):
-        #     # 使用st.image显示上传的图片
-        #     st.image(result, caption='处理完的图片', use_column_width=True)
-        #     st.session_state.good = False
-        #     # 定义一个下载按钮，当点击时触发下载
-        #     if st.button('Download Image'):
-        #         # 将BytesIO对象转换为Base64编码，以便在HTML中使用
-        #         img_str = base64.b64encode(result.getvalue()).decode()
-        #         href = f'<a href="data:image/png;base64,{img_str}" download="example_image.png">Download PNG Image</a>'
-        #         # 在Streamlit中显示可点击的链接
-        #         st.markdown(href, unsafe_allow_html=True)
-        #     st.success('Done!')
-        # else:
-        #     st.success('我也不知道咋出错啦!问问那个搞开发的叭！记得把出错的数据给他！')
