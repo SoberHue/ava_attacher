@@ -6,8 +6,8 @@ def show_page_deal():
     st.set_page_config('AVA Attacher', '🍪', layout='wide')
     st.header(f'欢迎你！{st.session_state.user}')
     st.session_state.good = False
-    container1 = st.container(height=300,border=bool)
-    container2 = st.container(height=300,border=bool)
+    container1 = st.container(height=300,border=True)
+    container2 = st.container(height=300,border=True)
     col1, col2 = container1.columns(2)
     col3, col4 = container2.columns(2)
     # 添加文件上传按钮
