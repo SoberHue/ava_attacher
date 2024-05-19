@@ -9,11 +9,14 @@ from pages.page_log import show_page_log
 
 controller = CookieController()
 st.session_state.controller = controller
-user_cookie = controller.get('xr_ava_attacher')
-
+# user_cookie = controller.get('xr_ava_attacher')
+user_cookie = '呱呱大王！'
 # 根据cookie是否存在来决定显示哪个“页面”
-if user_cookie:
-    st.session_state.user = user_cookie
-    show_page_deal()  # 显示deal页面的内容
-else:
-    show_page_log()  # 显示login页面的内容
+show_page_deal()
+# if user_cookie:
+#     st.session_state.user = user_cookie
+#     show_page_deal()  # 显示deal页面的内容
+# else:
+#     # show_page_log()  # 显示login页面的内容
+#     st.session_state.user = user_cookie
+#     show_page_deal()

@@ -1,6 +1,7 @@
 from utils import *
 import time
 import streamlit as st
+import copy
 
 # 假设其他函数如round_corners, color_to_white, origin_ava_positions, resize_and_overlay已定义
 def img_to_base64(img_data):
@@ -8,9 +9,9 @@ def img_to_base64(img_data):
     encoded = base64.b64encode(img_data).decode()
     return f"data:image/png;base64,{encoded}"
 
-def process_images(uploaded_file1, uploaded_file2):
+def process_images(uploaded_file1, uploaded_file2,r):
     image_data2 = BytesIO(uploaded_file2.read())
-    out_round_corners = round_corners(image_data2, 70)
+    out_round_corners = round_corners(image_data2, r)
     result_list = []
     with st.spinner('Wait for it...'):
         for img in uploaded_file1:
@@ -23,7 +24,7 @@ def process_images(uploaded_file1, uploaded_file2):
     return result_list
 
 def show_page_deal():
-    st.set_page_config('AVA Attacher', '🍪')
+    # st.set_page_config('AVA Attacher', '🍪')
     st.header(f'欢迎你！{st.session_state.get("user", "")}')
 
     if "generated_images" not in st.session_state:
@@ -37,7 +38,7 @@ def show_page_deal():
     result_list = []
 
     if uploaded_file1 and uploaded_file2:
-        st.session_state.result_list = process_images(uploaded_file1, uploaded_file2)
+        st.session_state.result_list = process_images(uploaded_file1, uploaded_file2, 90)
 
     if st.session_state.generated:
         if st.session_state.result_list:
@@ -64,4 +65,4 @@ def show_page_deal():
                 # )
                 # index += 1
 # 调用函数展示页面
-show_page_deal()
+# show_page_deal()
