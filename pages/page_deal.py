@@ -20,7 +20,7 @@ def show_page_deal():
     # 读取图片数据
     if uploaded_file1 and uploaded_file2:
         image_data2 = BytesIO(uploaded_file2.read())
-        out_round_corners = round_corners(image_data2, 90)
+        out_round_corners = round_corners(image_data2, 60)
         result_list = []
         with st.spinner('Wait for it...'):
             for img in uploaded_file1:
