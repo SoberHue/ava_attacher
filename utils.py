@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 import cv2
 import streamlit as st
 from io import BytesIO
@@ -99,19 +99,73 @@ def origin_ava_positions(input):
     return possible_avatars
 
 
+def draw_smooth_rounded_rectangle(draw, xy, corner_radius, fill=None, iterations=10):
+    x1, y1, x2, y2 = xy
+    for i in range(iterations):
+        offset = i + 1
+        color = (0, 0, 0, 255) if i == iterations - 1 else (0, 0, 0, int(255 * ((iterations - i) / iterations)))  # 透明度渐变模拟抗锯齿
+        draw.rounded_rectangle((x1+offset, y1+offset, x2-offset, y2-offset), corner_radius, fill=color, width=offset)
+
 def round_corners(image_path, radius):
-    """给图像添加圆角"""
+    """给图像添加圆角并减少锯齿"""
     with Image.open(image_path) as image:
         mask = Image.new('RGBA', image.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(mask)
-        draw.rounded_rectangle((0, 0, image.width, image.height), radius, fill=(0, 0, 0, 255))
-        result = Image.new('RGBA', image.size)
-        result.paste(image, (0, 0), mask=mask)
+        draw_smooth_rounded_rectangle(draw, (0, 0, image.width, image.height), radius)
+        result = Image.composite(image.convert("RGBA"), Image.new("RGBA", image.size, (0, 0, 0, 0)), mask)
         # 将结果保存到BytesIO对象
         img_byte_arr = BytesIO()
-        result.save(img_byte_arr, format='PNG')  # 以PNG格式保存，你可以根据需要更改格式
-        img_byte_arr.seek(0)  # 将指针移动到开头以便于读取
+        result.save(img_byte_arr, format='PNG')
+        img_byte_arr.seek(0)
         return img_byte_arr
+
+# def round_corners(img_bytes_io, radii):
+#     # 从BytesIO加载图像并转换为RGBA模式
+#     img = Image.open(img_bytes_io).convert("RGBA")
+#
+#     # 画圆并应用轻微模糊以优化抗锯齿效果
+#     circle = Image.new('L', (radii * 2, radii * 2), 0)  # 图像略大以容纳模糊效果
+#     draw = ImageDraw.Draw(circle)
+#     draw.ellipse((0, 0, radii * 2, radii * 2), fill=255)
+#     # circle = circle.filter(ImageFilter.EDGE_ENHANCE)  # 应用模糊滤镜优化边缘
+#
+#
+#     w, h = img.size
+#
+#     # 创建Alpha层并应用抗锯齿圆角，同时优化边缘透明度
+#     # 直接使用裁剪的圆角，但需要进一步处理以去除模糊边缘的半透明像素
+#     alpha = Image.new('L', img.size, 255)
+#     alpha.paste(circle.crop((0, 0, radii, radii)), (0, 0))  # 左上角
+#     alpha.paste(circle.crop((radii, 0, radii * 2, radii)), (w - radii, 0))  # 右上角
+#     alpha.paste(circle.crop((radii, radii, radii * 2, radii * 2)), (w - radii, h - radii))  # 右下角
+#     alpha.paste(circle.crop((0, radii, radii, radii * 2)), (0, h - radii))  # 左下角
+#     # 通过mask参数精确粘贴，这样只有原始圆内的像素才会影响alpha通道
+#     # 这将消除模糊边缘带来的半透明问题
+#
+#     # 应用Alpha层到原图
+#     img.putalpha(alpha)  # 现在边缘应该是干净且透明的了
+#
+#     # 保存到新的BytesIO对象并返回
+#     output_bytes_io = BytesIO()
+#     img.save(output_bytes_io, format='PNG')  # 使用PNG格式以保留透明度和抗锯齿效果
+#     output_bytes_io.seek(0)  # 将指针移回开始，以便读取
+#
+#     return output_bytes_io
+
+
+# def round_corners(image_bytes, radius):
+#     with Image.open(image_bytes) as original:
+#         original = original.resize((original.height, original.height))
+#         mask = Image.open('static/12345.png').resize((original.height, original.height))
+#         img = Image.new('RGBA', mask.size, (0, 0, 0, 0))
+#         # Save the image with transparency to BytesIO
+#         img.paste(original, mask=mask)
+#         # 将结果保存到BytesIO对象
+#         img_byte_arr = BytesIO()
+#         img.save(img_byte_arr, format='PNG')  # 以PNG格式保存，你可以根据需要更改格式
+#         img_byte_arr.seek(0)  # 将指针移动到开头以便于读取
+#         return img_byte_arr
+
 
 
 def resize_and_overlay(background_path, overlay_path, avatar_positions):
