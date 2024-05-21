@@ -99,7 +99,7 @@ def origin_ava_positions(input):
     return possible_avatars
 
 
-def draw_smooth_rounded_rectangle(draw, xy, corner_radius, fill=None, iterations=10):
+def draw_smooth_rounded_rectangle(draw, xy, corner_radius, fill=None, iterations=4):
     x1, y1, x2, y2 = xy
     for i in range(iterations):
         offset = i + 1
