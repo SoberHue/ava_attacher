@@ -28,6 +28,9 @@ def color_to_white(input_path, target_color=(237, 237, 237), tolerance=10):
     black = (0, 0, 0)
     result.paste(white, (0, 0), mask)
     result.paste(black, (0, 0), mask=mask.point(lambda p: p == 0))
+    result.rotate(45, resample=Image.Resampling.BILINEAR)
+    result = result.filter(ImageFilter.SMOOTH)
+    # result.rotate(45,resample=Image.Resampling.BICUBIC)
     # result.save("white_background.png")
     # 将结果保存到BytesIO对象
     img_byte_arr = BytesIO()
@@ -99,25 +102,32 @@ def origin_ava_positions(input):
     return possible_avatars
 
 
-def draw_smooth_rounded_rectangle(draw, xy, corner_radius, fill=None, iterations=4):
+def draw_smooth_rounded_rectangle(draw, xy, corner_radius, fill=None, iterations=2):
     x1, y1, x2, y2 = xy
     for i in range(iterations):
         offset = i + 1
         color = (0, 0, 0, 255) if i == iterations - 1 else (0, 0, 0, int(255 * ((iterations - i) / iterations)))  # 透明度渐变模拟抗锯齿
-        draw.rounded_rectangle((x1+offset, y1+offset, x2-offset, y2-offset), corner_radius, fill=color, width=offset)
+        draw.rounded_rectangle((x1 + offset, y1 + offset, x2 - offset, y2 - offset), corner_radius, fill=color, width=offset)
+
 
 def round_corners(image_path, radius):
     """给图像添加圆角并减少锯齿"""
     with Image.open(image_path) as image:
         mask = Image.new('RGBA', image.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(mask)
+
         draw_smooth_rounded_rectangle(draw, (0, 0, image.width, image.height), radius)
+        mask.rotate(45, resample=Image.Resampling.BILINEAR)
+        mask = mask.filter(ImageFilter.SMOOTH)
         result = Image.composite(image.convert("RGBA"), Image.new("RGBA", image.size, (0, 0, 0, 0)), mask)
+        result.rotate(45, resample=Image.Resampling.BILINEAR)
+        result = result.filter(ImageFilter.SMOOTH)
         # 将结果保存到BytesIO对象
         img_byte_arr = BytesIO()
         result.save(img_byte_arr, format='PNG')
         img_byte_arr.seek(0)
         return img_byte_arr
+
 
 # def round_corners(img_bytes_io, radii):
 #     # 从BytesIO加载图像并转换为RGBA模式
@@ -167,7 +177,6 @@ def round_corners(image_path, radius):
 #         return img_byte_arr
 
 
-
 def resize_and_overlay(background_path, overlay_path, avatar_positions):
     """调整圆角头像尺寸并贴到背景图片上"""
     with Image.open(background_path) as bg_img, Image.open(overlay_path) as overlay_img:
@@ -200,7 +209,6 @@ def resize_and_overlay(background_path, overlay_path, avatar_positions):
         combined.save(img_byte_arr, format='PNG')  # 以PNG格式保存，你可以根据需要更改格式
         img_byte_arr.seek(0)  # 将指针移动到开头以便于读取
         return img_byte_arr
-
 
 # if __name__ == '__main__':
 #     in_p = 'test2.jpg'
